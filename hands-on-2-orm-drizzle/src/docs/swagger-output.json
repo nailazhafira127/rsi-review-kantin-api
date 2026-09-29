@@ -1,0 +1,1715 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Review Kantin API",
+    "version": "1.0.0",
+    "description": "Dokumentasi OpenAPI 3.0 yang dibangkitkan otomatis dari schema zod (@asteasolutions/zod-to-openapi) — satu sumber kebenaran untuk validasi dan dokumentasi."
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000"
+    }
+  ],
+  "components": {
+    "schemas": {
+      "Stall": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "example": 1
+          },
+          "ownerId": {
+            "type": "number",
+            "example": 2
+          },
+          "name": {
+            "type": "string",
+            "example": "Kantin Bu Tini"
+          },
+          "category": {
+            "type": "string",
+            "nullable": true,
+            "example": "Kwetiau"
+          },
+          "location": {
+            "type": "string",
+            "nullable": true,
+            "example": "Kantin FKIP"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true,
+            "example": "Kedai kwetiau goreng & kuah"
+          },
+          "avgRating": {
+            "type": "number",
+            "example": 4.5
+          },
+          "reviewCount": {
+            "type": "number",
+            "example": 2
+          },
+          "isPopular": {
+            "type": "boolean",
+            "example": false
+          }
+        },
+        "required": [
+          "id",
+          "ownerId",
+          "name",
+          "category",
+          "location",
+          "description",
+          "avgRating",
+          "reviewCount",
+          "isPopular"
+        ]
+      },
+      "Menu": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "example": 1
+          },
+          "stallId": {
+            "type": "number",
+            "example": 2
+          },
+          "name": {
+            "type": "string",
+            "example": "Kwetiau Goreng Spesial"
+          },
+          "price": {
+            "type": "number",
+            "example": 15000
+          },
+          "isAvailable": {
+            "type": "boolean",
+            "example": true
+          }
+        },
+        "required": [
+          "id",
+          "stallId",
+          "name",
+          "price",
+          "isAvailable"
+        ]
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "example": "fail"
+          },
+          "message": {
+            "type": "string",
+            "example": "Validasi gagal"
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "field": {
+                  "type": "string"
+                },
+                "message": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "field",
+                "message"
+              ]
+            },
+            "example": [
+              {
+                "field": "name",
+                "message": "name minimal 3 karakter"
+              }
+            ]
+          }
+        },
+        "required": [
+          "status",
+          "message"
+        ]
+      },
+      "StallInput": {
+        "type": "object",
+        "properties": {
+          "ownerId": {
+            "type": "integer",
+            "minimum": 0,
+            "exclusiveMinimum": true,
+            "description": "ID owner (USERS.id dengan role owner)",
+            "example": 2
+          },
+          "name": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 100,
+            "description": "Nama kantin",
+            "example": "Kantin Baru"
+          },
+          "category": {
+            "type": "string",
+            "nullable": true,
+            "maxLength": 50,
+            "description": "Kategori kantin (mis. Nasi, Bakso, Minuman)",
+            "example": "Nasi"
+          },
+          "location": {
+            "type": "string",
+            "nullable": true,
+            "maxLength": 100,
+            "description": "Lokasi kantin",
+            "example": "Kantin FK"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true,
+            "maxLength": 1000,
+            "description": "Deskripsi kantin",
+            "example": "Nasi goreng dadakan"
+          }
+        },
+        "required": [
+          "ownerId",
+          "name"
+        ],
+        "additionalProperties": false
+      },
+      "StallUpdate": {
+        "type": "object",
+        "properties": {
+          "ownerId": {
+            "type": "integer",
+            "minimum": 0,
+            "exclusiveMinimum": true,
+            "description": "ID owner (USERS.id dengan role owner)",
+            "example": 2
+          },
+          "name": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 100,
+            "description": "Nama kantin",
+            "example": "Kantin Baru"
+          },
+          "category": {
+            "type": "string",
+            "nullable": true,
+            "maxLength": 50,
+            "description": "Kategori kantin (mis. Nasi, Bakso, Minuman)",
+            "example": "Nasi"
+          },
+          "location": {
+            "type": "string",
+            "nullable": true,
+            "maxLength": 100,
+            "description": "Lokasi kantin",
+            "example": "Kantin FK"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true,
+            "maxLength": 1000,
+            "description": "Deskripsi kantin",
+            "example": "Nasi goreng dadakan"
+          }
+        },
+        "additionalProperties": false
+      },
+      "UserInput": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100
+          },
+          "email": {
+            "type": "string",
+            "maxLength": 150,
+            "format": "email"
+          },
+          "password": {
+            "type": "string",
+            "minLength": 8,
+            "maxLength": 128
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "admin",
+              "owner",
+              "customer"
+            ]
+          }
+        },
+        "required": [
+          "name",
+          "email",
+          "password",
+          "role"
+        ],
+        "additionalProperties": false
+      },
+      "MenuItemInput": {
+        "type": "object",
+        "properties": {
+          "stallId": {
+            "type": "integer",
+            "minimum": 0,
+            "exclusiveMinimum": true
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100
+          },
+          "price": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "isAvailable": {
+            "type": "boolean",
+            "default": true
+          }
+        },
+        "required": [
+          "stallId",
+          "name",
+          "price"
+        ],
+        "additionalProperties": false
+      },
+      "MenuItemUpdate": {
+        "type": "object",
+        "properties": {
+          "stallId": {
+            "type": "integer",
+            "minimum": 0,
+            "exclusiveMinimum": true
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100
+          },
+          "price": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "isAvailable": {
+            "type": "boolean",
+            "default": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ReviewInput": {
+        "type": "object",
+        "properties": {
+          "stallId": {
+            "type": "integer",
+            "minimum": 0,
+            "exclusiveMinimum": true
+          },
+          "userId": {
+            "type": "integer",
+            "minimum": 0,
+            "exclusiveMinimum": true
+          },
+          "rating": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 5
+          },
+          "comment": {
+            "type": "string",
+            "nullable": true,
+            "maxLength": 4000
+          }
+        },
+        "required": [
+          "stallId",
+          "userId",
+          "rating"
+        ],
+        "additionalProperties": false
+      },
+      "LikeInput": {
+        "type": "object",
+        "properties": {
+          "reviewId": {
+            "type": "integer",
+            "minimum": 0,
+            "exclusiveMinimum": true
+          },
+          "userId": {
+            "type": "integer",
+            "minimum": 0,
+            "exclusiveMinimum": true
+          }
+        },
+        "required": [
+          "reviewId",
+          "userId"
+        ],
+        "additionalProperties": false
+      },
+      "FlagStatusInput": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "resolved",
+              "dismissed"
+            ]
+          }
+        },
+        "required": [
+          "status"
+        ],
+        "additionalProperties": false
+      },
+      "AuditLogInput": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "integer",
+            "minimum": 0,
+            "exclusiveMinimum": true
+          },
+          "action": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 50
+          },
+          "targetTable": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 50
+          },
+          "targetId": {
+            "type": "integer",
+            "minimum": 0,
+            "exclusiveMinimum": true
+          },
+          "metadata": {
+            "type": "object",
+            "nullable": true,
+            "additionalProperties": {
+              "nullable": true
+            }
+          }
+        },
+        "required": [
+          "userId",
+          "action",
+          "targetTable",
+          "targetId"
+        ],
+        "additionalProperties": false
+      },
+      "StallListResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "success"
+            ]
+          },
+          "meta": {
+            "type": "object",
+            "properties": {
+              "page": {
+                "type": "number",
+                "example": 1
+              },
+              "limit": {
+                "type": "number",
+                "example": 10
+              },
+              "total": {
+                "type": "number",
+                "example": 10
+              }
+            },
+            "required": [
+              "page",
+              "limit",
+              "total"
+            ]
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Stall"
+            }
+          }
+        },
+        "required": [
+          "status",
+          "meta",
+          "data"
+        ]
+      },
+      "StallDetailResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "success"
+            ]
+          },
+          "data": {
+            "$ref": "#/components/schemas/Stall"
+          }
+        },
+        "required": [
+          "status",
+          "data"
+        ]
+      },
+      "MenuListResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "success"
+            ]
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Menu"
+            }
+          }
+        },
+        "required": [
+          "status",
+          "data"
+        ]
+      }
+    },
+    "parameters": {}
+  },
+  "paths": {
+    "/health": {
+      "get": {
+        "tags": [
+          "SYSTEM"
+        ],
+        "summary": "Cek kesehatan server & database",
+        "responses": {
+          "200": {
+            "description": "Server dan database terhubung",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "success"
+                      ]
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "message"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/stalls": {
+      "get": {
+        "tags": [
+          "STALLS"
+        ],
+        "summary": "Daftar kantin",
+        "description": "Daftar kantin dengan filter `search`/`category` dan pagination.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 100,
+              "description": "Cari berdasarkan nama kantin"
+            },
+            "required": false,
+            "name": "search",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 50,
+              "description": "Filter kategori kantin",
+              "example": "Minuman"
+            },
+            "required": false,
+            "name": "category",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1,
+              "description": "Nomor halaman (default 1)",
+              "example": 1
+            },
+            "required": false,
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 10,
+              "description": "Jumlah data per halaman (maks 100)",
+              "example": 10
+            },
+            "required": false,
+            "name": "limit",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Daftar kantin + meta pagination",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StallListResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Query parameter tidak valid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "STALLS"
+        ],
+        "summary": "Tambah kantin",
+        "requestBody": {
+          "description": "Data kantin baru",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StallInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Kantin berhasil dibuat",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StallDetailResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Body tidak valid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/stalls/{id}": {
+      "get": {
+        "tags": [
+          "STALLS"
+        ],
+        "summary": "Detail kantin",
+        "parameters": [
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "exclusiveMinimum": true,
+              "description": "ID kantin",
+              "example": 3
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Detail kantin",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StallDetailResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Parameter id tidak valid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Kantin tidak ditemukan",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "STALLS"
+        ],
+        "summary": "Update kantin",
+        "parameters": [
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "exclusiveMinimum": true,
+              "description": "ID kantin",
+              "example": 3
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "description": "Data kantin yang diubah (boleh sebagian)",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StallUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Kantin ter-update",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StallDetailResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Body/parameter tidak valid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Kantin tidak ditemukan",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "STALLS"
+        ],
+        "summary": "Hapus kantin",
+        "parameters": [
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "exclusiveMinimum": true,
+              "description": "ID kantin",
+              "example": 3
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Kantin terhapus",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StallDetailResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Parameter id tidak valid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Kantin tidak ditemukan",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/stalls/{id}/menus": {
+      "get": {
+        "tags": [
+          "STALLS"
+        ],
+        "summary": "Daftar menu sebuah kantin",
+        "parameters": [
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "exclusiveMinimum": true,
+              "description": "ID kantin",
+              "example": 3
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Daftar menu milik kantin",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MenuListResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Parameter id tidak valid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Kantin tidak ditemukan",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/users": {
+      "get": {
+        "tags": [
+          "USERS"
+        ],
+        "summary": "Daftar pengguna",
+        "responses": {
+          "200": {
+            "description": "Daftar pengguna",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "success"
+                      ]
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "nullable": true
+                      }
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "data"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "USERS"
+        ],
+        "summary": "Tambah pengguna",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Pengguna berhasil dibuat",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "success"
+                      ]
+                    },
+                    "data": {
+                      "nullable": true
+                    }
+                  },
+                  "required": [
+                    "status"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Body tidak valid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/menu-items": {
+      "get": {
+        "tags": [
+          "MENU_ITEMS"
+        ],
+        "summary": "Daftar menu (join stall)",
+        "responses": {
+          "200": {
+            "description": "Daftar menu dengan nama kantin",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "success"
+                      ]
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "nullable": true
+                      }
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "data"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "MENU_ITEMS"
+        ],
+        "summary": "Tambah menu",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MenuItemInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Menu berhasil dibuat",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "success"
+                      ]
+                    },
+                    "data": {
+                      "nullable": true
+                    }
+                  },
+                  "required": [
+                    "status"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Body tidak valid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/menu-items/{id}": {
+      "get": {
+        "tags": [
+          "MENU_ITEMS"
+        ],
+        "summary": "Detail menu",
+        "parameters": [
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "exclusiveMinimum": true,
+              "description": "ID kantin",
+              "example": 3
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Detail menu dengan nama kantin",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "success"
+                      ]
+                    },
+                    "data": {
+                      "nullable": true
+                    }
+                  },
+                  "required": [
+                    "status"
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Menu tidak ditemukan",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "MENU_ITEMS"
+        ],
+        "summary": "Ubah menu",
+        "parameters": [
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "exclusiveMinimum": true,
+              "description": "ID kantin",
+              "example": 3
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MenuItemUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Menu diperbarui",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "success"
+                      ]
+                    },
+                    "data": {
+                      "nullable": true
+                    }
+                  },
+                  "required": [
+                    "status"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Input tidak valid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Menu tidak ditemukan",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "MENU_ITEMS"
+        ],
+        "summary": "Hapus menu",
+        "parameters": [
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "exclusiveMinimum": true,
+              "description": "ID kantin",
+              "example": 3
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Menu dihapus",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "success"
+                      ]
+                    },
+                    "data": {
+                      "nullable": true
+                    }
+                  },
+                  "required": [
+                    "status"
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Menu tidak ditemukan",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/reviews": {
+      "get": {
+        "tags": [
+          "REVIEWS"
+        ],
+        "summary": "Daftar review (join user)",
+        "responses": {
+          "200": {
+            "description": "Daftar review dengan nama pengguna",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "success"
+                      ]
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "nullable": true
+                      }
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "data"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "REVIEWS"
+        ],
+        "summary": "Tambah review",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReviewInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Review berhasil dibuat",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "success"
+                      ]
+                    },
+                    "data": {
+                      "nullable": true
+                    }
+                  },
+                  "required": [
+                    "status"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Body tidak valid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/reviews/{id}": {
+      "delete": {
+        "tags": [
+          "REVIEWS"
+        ],
+        "summary": "Hapus review",
+        "parameters": [
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "exclusiveMinimum": true,
+              "description": "ID kantin",
+              "example": 3
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Review dihapus",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "success"
+                      ]
+                    },
+                    "data": {
+                      "nullable": true
+                    }
+                  },
+                  "required": [
+                    "status"
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Review tidak ditemukan",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/likes": {
+      "post": {
+        "tags": [
+          "LIKES"
+        ],
+        "summary": "Beri like pada review",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LikeInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Like berhasil dibuat",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "success"
+                      ]
+                    },
+                    "data": {
+                      "nullable": true
+                    }
+                  },
+                  "required": [
+                    "status"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Body tidak valid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/likes/{id}": {
+      "delete": {
+        "tags": [
+          "LIKES"
+        ],
+        "summary": "Hapus like",
+        "parameters": [
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "exclusiveMinimum": true,
+              "description": "ID kantin",
+              "example": 3
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Like dihapus",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "success"
+                      ]
+                    },
+                    "data": {
+                      "nullable": true
+                    }
+                  },
+                  "required": [
+                    "status"
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Like tidak ditemukan",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/flags": {
+      "get": {
+        "tags": [
+          "FLAGS"
+        ],
+        "summary": "Daftar laporan review",
+        "responses": {
+          "200": {
+            "description": "Daftar flags",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "success"
+                      ]
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "nullable": true
+                      }
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "data"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/flags/{id}": {
+      "put": {
+        "tags": [
+          "FLAGS"
+        ],
+        "summary": "Perbarui status laporan",
+        "parameters": [
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "exclusiveMinimum": true,
+              "description": "ID kantin",
+              "example": 3
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FlagStatusInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Status laporan diperbarui",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "success"
+                      ]
+                    },
+                    "data": {
+                      "nullable": true
+                    }
+                  },
+                  "required": [
+                    "status"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Input tidak valid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Flag tidak ditemukan",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/audit-logs": {
+      "get": {
+        "tags": [
+          "AUDIT_LOGS"
+        ],
+        "summary": "Daftar audit log",
+        "responses": {
+          "200": {
+            "description": "Daftar audit log",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "success"
+                      ]
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "nullable": true
+                      }
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "data"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "AUDIT_LOGS"
+        ],
+        "summary": "Catat aktivitas audit",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AuditLogInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Audit log berhasil dibuat",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "success"
+                      ]
+                    },
+                    "data": {
+                      "nullable": true
+                    }
+                  },
+                  "required": [
+                    "status"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Body tidak valid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
